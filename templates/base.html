@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="방송은 어디서 하든, 후원은 직접·투명하게.">
+  <link rel="stylesheet" href="{{ paths.stylesheet }}">
+  <title>{% block title %}RILL3{% endblock %}</title>
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+  <header class="site-header">
+    <a class="brand" href="{{ paths.home }}" aria-label="RILL3 홈">RILL<span>3</span></a>
+    <nav class="site-nav" aria-label="주 메뉴"><a href="{{ paths.home }}">라이브</a><a href="{{ paths.channels }}">등록 채널</a></nav>
+    <p>Stream anywhere. Tip directly.</p>
+  </header>
+  <main id="content" class="shell">{% block content %}{% endblock %}</main>
+  <footer class="site-footer">
+    <p>외부 플랫폼의 공식 플레이어 또는 링크만 사용합니다.</p>
+  </footer>
+</body>
+</html>

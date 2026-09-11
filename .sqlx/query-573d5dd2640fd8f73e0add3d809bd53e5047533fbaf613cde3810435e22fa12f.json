@@ -1,0 +1,425 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT\n                c.id AS creator_id,\n                c.slug AS creator_slug,\n                c.display_name AS creator_display_name,\n                c.bio AS creator_bio,\n                c.locale AS creator_locale,\n                c.status AS creator_status,\n                c.created_at AS creator_created_at,\n                c.updated_at AS creator_updated_at,\n                ch.id AS channel_id,\n                ch.creator_id AS channel_creator_id,\n                ch.provider AS channel_provider,\n                ch.provider_channel_id AS channel_provider_channel_id,\n                ch.handle AS channel_handle,\n                ch.canonical_url AS channel_canonical_url,\n                ch.current_live_url AS channel_current_live_url,\n                ch.manual_live_status AS channel_manual_live_status,\n                ch.manual_state_expires_at AS channel_manual_state_expires_at,\n                ch.embed_capability AS channel_embed_capability,\n                ch.verification_state AS channel_verification_state,\n                ch.enabled AS channel_enabled,\n                ch.created_at AS channel_created_at,\n                ch.updated_at AS channel_updated_at,\n                ls.id AS \"session_id?\",\n                ls.channel_id AS \"session_channel_id?\",\n                ls.provider_session_id AS \"session_provider_session_id?\",\n                ls.status AS \"session_status?\",\n                ls.title AS \"session_title?\",\n                ls.category AS \"session_category?\",\n                ls.thumbnail_url AS \"session_thumbnail_url?\",\n                ls.started_at AS \"session_started_at?\",\n                ls.ended_at AS \"session_ended_at?\",\n                ls.observed_at AS \"session_observed_at?\",\n                ls.last_success_at AS \"session_last_success_at?\",\n                ls.stale_since AS \"session_stale_since?\"\n            FROM creators c\n            JOIN external_channels ch ON ch.creator_id = c.id\n            LEFT JOIN live_sessions ls ON ls.channel_id = ch.id\n            WHERE c.slug = $1\n              AND c.status = 'active'\n              AND ch.enabled\n              AND ch.verification_state <> 'disabled'\n              AND ($2::uuid IS NULL OR ch.id = $2)\n            ORDER BY\n              CASE\n                WHEN ch.provider IN ('youtube', 'link_only') THEN\n                  CASE\n                    WHEN ch.manual_live_status = 'online'\n                      AND ch.manual_state_expires_at > now()\n                      AND ch.current_live_url IS NOT NULL\n                      AND ls.status = 'online'\n                      AND ls.observed_at >= ch.updated_at THEN 0\n                    WHEN ch.manual_live_status = 'offline'\n                      AND (ch.manual_state_expires_at IS NULL\n                           OR ch.manual_state_expires_at > now()) THEN 2\n                    ELSE 1\n                  END\n                ELSE CASE ls.status\n                  WHEN 'online' THEN 0\n                  WHEN 'unknown' THEN 1\n                  ELSE 2\n                END\n              END,\n              (ls.stale_since IS NOT NULL),\n              ls.observed_at DESC NULLS LAST,\n              ch.id\n            LIMIT 1\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "creator_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "creators",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "creator_slug",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "creators",
+            "name": "slug"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "creator_display_name",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "creators",
+            "name": "display_name"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "creator_bio",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "creators",
+            "name": "bio"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "creator_locale",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "creators",
+            "name": "locale"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "creator_status",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "creators",
+            "name": "status"
+          }
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "creator_created_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "creators",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "creator_updated_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "creators",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "channel_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "channel_creator_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "creator_id"
+          }
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "channel_provider",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "provider"
+          }
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "channel_provider_channel_id",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "provider_channel_id"
+          }
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "channel_handle",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "handle"
+          }
+        }
+      },
+      {
+        "ordinal": 13,
+        "name": "channel_canonical_url",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "canonical_url"
+          }
+        }
+      },
+      {
+        "ordinal": 14,
+        "name": "channel_current_live_url",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "current_live_url"
+          }
+        }
+      },
+      {
+        "ordinal": 15,
+        "name": "channel_manual_live_status",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "manual_live_status"
+          }
+        }
+      },
+      {
+        "ordinal": 16,
+        "name": "channel_manual_state_expires_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "manual_state_expires_at"
+          }
+        }
+      },
+      {
+        "ordinal": 17,
+        "name": "channel_embed_capability",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "embed_capability"
+          }
+        }
+      },
+      {
+        "ordinal": 18,
+        "name": "channel_verification_state",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "verification_state"
+          }
+        }
+      },
+      {
+        "ordinal": 19,
+        "name": "channel_enabled",
+        "type_info": "Bool",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "enabled"
+          }
+        }
+      },
+      {
+        "ordinal": 20,
+        "name": "channel_created_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "ordinal": 21,
+        "name": "channel_updated_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "ordinal": 22,
+        "name": "session_id?",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 23,
+        "name": "session_channel_id?",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "channel_id"
+          }
+        }
+      },
+      {
+        "ordinal": 24,
+        "name": "session_provider_session_id?",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "provider_session_id"
+          }
+        }
+      },
+      {
+        "ordinal": 25,
+        "name": "session_status?",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "status"
+          }
+        }
+      },
+      {
+        "ordinal": 26,
+        "name": "session_title?",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "title"
+          }
+        }
+      },
+      {
+        "ordinal": 27,
+        "name": "session_category?",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "category"
+          }
+        }
+      },
+      {
+        "ordinal": 28,
+        "name": "session_thumbnail_url?",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "thumbnail_url"
+          }
+        }
+      },
+      {
+        "ordinal": 29,
+        "name": "session_started_at?",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "started_at"
+          }
+        }
+      },
+      {
+        "ordinal": 30,
+        "name": "session_ended_at?",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "ended_at"
+          }
+        }
+      },
+      {
+        "ordinal": 31,
+        "name": "session_observed_at?",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "observed_at"
+          }
+        }
+      },
+      {
+        "ordinal": 32,
+        "name": "session_last_success_at?",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "last_success_at"
+          }
+        }
+      },
+      {
+        "ordinal": 33,
+        "name": "session_stale_since?",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "stale_since"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "573d5dd2640fd8f73e0add3d809bd53e5047533fbaf613cde3810435e22fa12f"
+}

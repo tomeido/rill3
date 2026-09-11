@@ -1,0 +1,27 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT (current_live_url IS DISTINCT FROM $3\n                    OR manual_live_status IS DISTINCT FROM $4\n                    OR manual_state_expires_at IS DISTINCT FROM $5) AS \"changed!\"\n            FROM external_channels\n            WHERE provider = $1 AND provider_channel_id = $2\n            FOR UPDATE\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "changed!",
+        "type_info": "Bool",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "d565cd8f19b24520f916a356e69e28ab9a3069e5740a5e729f5ac0d2aab5d629"
+}

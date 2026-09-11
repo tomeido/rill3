@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE provider_events\n            SET\n                status = $2,\n                handled_at = GREATEST(clock_timestamp(), received_at)\n            WHERE id = $1\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "631f2b6f0ec0d8a4ddb28cf7eabf22272d15db341737c0074424f50982e9df7d"
+}

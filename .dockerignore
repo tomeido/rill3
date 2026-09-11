@@ -1,0 +1,17 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+target
+**/target
+node_modules
+**/node_modules
+.idea
+.vscode
+*.log
+*.tmp
+deploy/postgres-data
+deploy/caddy-data
+deploy/caddy-config
+

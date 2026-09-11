@@ -1,0 +1,185 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT\n                id,\n                creator_id,\n                provider,\n                provider_channel_id,\n                handle,\n                canonical_url,\n                current_live_url,\n                manual_live_status,\n                manual_state_expires_at,\n                embed_capability,\n                verification_state,\n                enabled,\n                created_at,\n                updated_at\n            FROM external_channels\n            WHERE provider = $1 AND provider_channel_id = $2\n            LIMIT 1\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "creator_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "creator_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "provider",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "provider"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "provider_channel_id",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "provider_channel_id"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "handle",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "handle"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "canonical_url",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "canonical_url"
+          }
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "current_live_url",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "current_live_url"
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "manual_live_status",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "manual_live_status"
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "manual_state_expires_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "manual_state_expires_at"
+          }
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "embed_capability",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "embed_capability"
+          }
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "verification_state",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "verification_state"
+          }
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "enabled",
+        "type_info": "Bool",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "enabled"
+          }
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "created_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "ordinal": 13,
+        "name": "updated_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "updated_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "88e36ac0410cf36c428ae6d022bbbc5fac8f33b923e40afc890fbe77b8084c27"
+}

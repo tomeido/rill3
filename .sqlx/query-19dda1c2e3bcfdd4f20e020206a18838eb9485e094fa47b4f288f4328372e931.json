@@ -1,0 +1,21 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT count(*) AS \"count!\"\n        FROM pg_type AS t\n        JOIN pg_namespace AS n ON n.oid = t.typnamespace\n        WHERE n.nspname = current_schema() AND t.typtype = 'e'\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count!",
+        "type_info": "Int8",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "19dda1c2e3bcfdd4f20e020206a18838eb9485e094fa47b4f288f4328372e931"
+}

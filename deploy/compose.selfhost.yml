@@ -1,0 +1,44 @@
+name: rill3-selfhost
+
+# Uses the host's existing Caddy and certificate storage on domeido-edge.
+# The database and worker remain on the private application network.
+x-public-environment: &public-environment
+  RILL3_ENVIRONMENT: production
+  RILL3_PUBLIC_ORIGIN: ${RILL3_PUBLIC_ORIGIN:?Set the HTTPS public origin}
+  RILL3_BASE_PATH: ${RILL3_BASE_PATH:-/rill3}
+  RILL3_TWITCH_PARENT: ${RILL3_TWITCH_PARENT:?Set the public hostname}
+  DATABASE_URL: postgres://${POSTGRES_USER:-rill3}:${POSTGRES_PASSWORD:?Set a generated database password}@postgres:5432/${POSTGRES_DB:-rill3}
+
+services:
+  postgres:
+    extends:
+      file: compose.yml
+      service: postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a generated database password}
+    ports: !reset []
+
+  server:
+    extends:
+      file: compose.yml
+      service: server
+    environment: *public-environment
+    networks:
+      default:
+      edge:
+        aliases:
+          - rill3-server
+
+  worker:
+    extends:
+      file: compose.yml
+      service: worker
+    environment: *public-environment
+
+networks:
+  edge:
+    external: true
+    name: ${RILL3_EDGE_NETWORK:-domeido-edge}
+
+volumes:
+  postgres-data:

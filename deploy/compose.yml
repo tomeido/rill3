@@ -1,0 +1,101 @@
+name: rill3
+
+x-app-environment: &app-environment
+  RILL3_ENVIRONMENT: ${RILL3_ENVIRONMENT:-development}
+  RILL3_BIND_ADDR: 0.0.0.0:3000
+  RILL3_PUBLIC_ORIGIN: ${RILL3_PUBLIC_ORIGIN:-http://localhost:8080}
+  RILL3_BASE_PATH: ${RILL3_BASE_PATH:-}
+  RILL3_TWITCH_PARENT: ${RILL3_TWITCH_PARENT:-localhost}
+  RILL3_DB_MAX_CONNECTIONS: ${RILL3_DB_MAX_CONNECTIONS:-20}
+  RUST_LOG: ${RUST_LOG:-info,rill3=debug,tower_http=info}
+  DATABASE_URL: postgres://${POSTGRES_USER:-rill3}:${POSTGRES_PASSWORD:-rill3-development-only}@postgres:5432/${POSTGRES_DB:-rill3}
+  TWITCH_CLIENT_ID: ${TWITCH_CLIENT_ID:-}
+  TWITCH_CLIENT_SECRET: ${TWITCH_CLIENT_SECRET:-}
+  TWITCH_EVENTSUB_SECRET: ${TWITCH_EVENTSUB_SECRET:-}
+  CHZZK_CLIENT_ID: ${CHZZK_CLIENT_ID:-}
+  CHZZK_CLIENT_SECRET: ${CHZZK_CLIENT_SECRET:-}
+  YOUTUBE_WEBSUB_TOKEN: ${YOUTUBE_WEBSUB_TOKEN:-}
+  YOUTUBE_WEBSUB_SECRET: ${YOUTUBE_WEBSUB_SECRET:-}
+
+x-app: &app
+  image: rill3:${RILL3_IMAGE_TAG:-dev}
+  build:
+    context: ..
+    dockerfile: deploy/Dockerfile
+  init: true
+  restart: unless-stopped
+  stop_signal: SIGTERM
+  stop_grace_period: 30s
+  read_only: true
+  tmpfs:
+    - /tmp:size=16m,mode=1777
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  environment: *app-environment
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-rill3}
+      POSTGRES_USER: ${POSTGRES_USER:-rill3}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rill3-development-only}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    security_opt:
+      - no-new-privileges:true
+
+  server:
+    <<: *app
+    command: ["server"]
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "--show-error", "http://127.0.0.1:3000/health/live"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  worker:
+    <<: *app
+    command: ["worker"]
+    healthcheck:
+      disable: true
+
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    depends_on:
+      server:
+        condition: service_healthy
+    environment:
+      RILL3_SITE_ADDRESS: ${RILL3_SITE_ADDRESS:-:80}
+    ports:
+      - "${RILL3_HTTP_PORT:-8080}:80"
+      - "${RILL3_HTTPS_PORT:-8443}:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  postgres-data:
+  caddy-data:
+  caddy-config:

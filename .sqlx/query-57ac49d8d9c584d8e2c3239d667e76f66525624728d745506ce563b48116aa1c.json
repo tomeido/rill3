@@ -1,0 +1,196 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            ch.provider AS channel_provider,\n            ch.provider_channel_id AS channel_provider_channel_id,\n            ch.handle AS channel_handle,\n            ch.updated_at AS channel_updated_at,\n            ls.id AS \"session_id?\",\n            ls.provider_session_id AS \"session_provider_session_id?\",\n            ls.status AS \"session_status?\",\n            ls.title AS \"session_title?\",\n            ls.category AS \"session_category?\",\n            ls.thumbnail_url AS \"session_thumbnail_url?\",\n            ls.started_at AS \"session_started_at?\",\n            ls.ended_at AS \"session_ended_at?\",\n            ls.observed_at AS \"session_observed_at?\",\n            ls.last_success_at AS \"session_last_success_at?\",\n            ls.stale_since AS \"session_stale_since?\"\n        FROM external_channels AS ch\n        LEFT JOIN live_sessions AS ls ON ls.channel_id = ch.id\n        WHERE ch.id = $1\n        FOR UPDATE OF ch\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "channel_provider",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "provider"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "channel_provider_channel_id",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "provider_channel_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "channel_handle",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "handle"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "channel_updated_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "session_id?",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "session_provider_session_id?",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "provider_session_id"
+          }
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "session_status?",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "status"
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "session_title?",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "title"
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "session_category?",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "category"
+          }
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "session_thumbnail_url?",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "thumbnail_url"
+          }
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "session_started_at?",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "started_at"
+          }
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "session_ended_at?",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "ended_at"
+          }
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "session_observed_at?",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "observed_at"
+          }
+        }
+      },
+      {
+        "ordinal": 13,
+        "name": "session_last_success_at?",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "last_success_at"
+          }
+        }
+      },
+      {
+        "ordinal": 14,
+        "name": "session_stale_since?",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "live_sessions",
+            "name": "stale_since"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "57ac49d8d9c584d8e2c3239d667e76f66525624728d745506ce563b48116aa1c"
+}

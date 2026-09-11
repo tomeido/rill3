@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}라이브 — RILL3{% endblock %}
+{% block content %}
+<div class="discovery-page{% if !lives.is_empty() %} has-live{% endif %}">
+<section class="hero" aria-labelledby="page-title">
+  <p class="eyebrow">LIVE DISCOVERY</p>
+  {% if lives.is_empty() %}
+  <h1 id="page-title">흐르는 방송을<br>한곳에서 만나세요.</h1>
+  <p>여러 플랫폼의 방송을 발견하고, 원래 플랫폼에서 바로 시청하세요.</p>
+  {% else %}
+  <h1 id="page-title">지금, 함께 볼 방송.</h1>
+  <p>마음에 드는 방송을 원래 플랫폼에서 바로 시청하세요.</p>
+  {% endif %}
+</section>
+
+{% if lives.is_empty() %}{% include "platform_links.html" %}{% endif %}
+
+{% if has_degraded_providers %}
+<aside class="notice" role="status">일부 방송 정보의 확인이 지연되고 있습니다. 마지막으로 확인된 상태를 표시합니다.</aside>
+{% endif %}
+
+<section aria-labelledby="live-heading">
+  <div class="section-heading">
+    <h2 id="live-heading">지금 라이브</h2>
+    <span class="count">표시 중 {{ lives.len() }}개</span>
+    <a class="section-action" href="{{ paths.home }}">라이브 새로고침</a>
+  </div>
+  {% if lives.is_empty() %}
+  <div class="empty-state">
+    {% if channels.is_empty() %}
+    <h3>아직 등록된 채널이 없습니다.</h3>
+    <p>플랫폼 바로가기로 방송과 영상을 둘러보세요.</p>
+    {% else %}
+    <h3>지금은 확인된 라이브가 없습니다.</h3>
+    <p>방송을 기다리는 동안 등록된 채널을 둘러보세요.</p>
+    <a class="button button-secondary" href="{{ paths.channels }}">등록 채널 보기</a>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="live-grid">
+    {% for live in lives %}
+    <article class="live-card{% if live.is_stale %} is-stale{% endif %}">
+      <a href="{{ paths.base }}/c/{{ live.creator_slug }}?channel={{ live.channel_id }}" aria-label="{{ live.creator_name }} {{ live.provider }} 방송 정보 보기">
+        <div class="thumb-wrap">
+          {% if live.has_thumbnail %}<img src="{{ live.thumbnail_url }}" width="640" height="360" loading="lazy" decoding="async" alt="">{% else %}<div class="thumb-placeholder" aria-hidden="true">R3</div>{% endif %}
+          {% if live.is_live %}<span class="live-pill">{% if live.is_stale %}최근 LIVE{% else %}LIVE{% endif %}</span>{% endif %}
+          {% if live.is_stale %}<span class="stale-pill">확인 지연</span>{% endif %}
+        </div>
+        <div class="card-body">
+          <div class="avatar" aria-hidden="true">{{ live.initial }}</div>
+          <div>
+            <h3>{{ live.creator_name }}</h3>
+            <p class="title">{{ live.title }}</p>
+            <p class="meta">{{ live.provider }}{% if live.has_category %} · {{ live.category }}{% endif %}</p>
+            <p class="meta">{% if !live.started_at.is_empty() %}<time datetime="{{ live.started_at }}">{{ live.started_label }}</time>{% else %}{{ live.started_label }}{% endif %}</p>
+            {% if live.is_manual %}<p class="manual-label">등록 정보 기준</p>{% endif %}
+            {% if live.is_stale %}<p class="meta">{% if !live.observed_at.is_empty() %}<time datetime="{{ live.observed_at }}">{{ live.observed_label }}</time>{% else %}{{ live.observed_label }}{% endif %}</p>{% endif %}
+          </div>
+        </div>
+      </a>
+      <div class="card-actions">
+        <a href="{{ paths.base }}/c/{{ live.creator_slug }}?channel={{ live.channel_id }}" aria-label="{{ live.creator_name }} {{ live.provider }} 방송 정보">방송 정보</a>
+        {% if live.has_external_url %}<a class="button" href="{{ live.external_url }}" rel="noopener noreferrer external" aria-label="{{ live.creator_name }} 방송 {{ live.provider }}에서 보기">{{ live.provider }}에서 보기 <span aria-hidden="true">↗</span></a>{% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+
+{% if !lives.is_empty() %}{% include "platform_links.html" %}{% endif %}
+
+{% if !channels.is_empty() %}
+<section class="channel-section" aria-labelledby="channel-heading">
+  <div class="section-heading"><h2 id="channel-heading">등록 채널</h2><a class="section-action" href="{{ paths.channels }}">전체 채널 보기</a></div>
+  <p class="section-description">방송 중이 아니어도 채널을 방문할 수 있습니다.</p>
+  {% include "channel_cards.html" %}
+</section>
+{% endif %}
+
+<section class="provider-health" aria-labelledby="health-heading">
+  <h2 id="health-heading">방송 정보 연결 상태</h2>
+  <p class="section-description">RILL3의 방송 정보 확인 설정입니다. 실제 방송 여부는 채널별 상태를 확인해 주세요.</p>
+  <ul>{% for provider in providers %}<li><span class="status-dot status-{{ provider.css_status }}" aria-hidden="true"></span><strong>{{ provider.name }}</strong><span>{{ provider.label }}</span></li>{% endfor %}</ul>
+</section>
+</div>
+{% endblock %}

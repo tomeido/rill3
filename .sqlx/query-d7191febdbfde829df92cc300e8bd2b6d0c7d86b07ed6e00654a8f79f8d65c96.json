@@ -1,0 +1,195 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO external_channels (\n                id, creator_id, provider, provider_channel_id, handle, canonical_url,\n                current_live_url, manual_live_status, manual_state_expires_at,\n                embed_capability, verification_state, enabled, created_at, updated_at\n            )\n            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'verified', true, $11, $12)\n            ON CONFLICT (provider, provider_channel_id) DO UPDATE SET\n                handle = EXCLUDED.handle,\n                canonical_url = EXCLUDED.canonical_url,\n                current_live_url = EXCLUDED.current_live_url,\n                manual_live_status = EXCLUDED.manual_live_status,\n                manual_state_expires_at = EXCLUDED.manual_state_expires_at,\n                embed_capability = EXCLUDED.embed_capability,\n                verification_state = EXCLUDED.verification_state\n            WHERE external_channels.creator_id = EXCLUDED.creator_id\n              AND external_channels.enabled\n              AND external_channels.verification_state <> 'disabled'\n            RETURNING\n                id, creator_id, provider, provider_channel_id, handle, canonical_url,\n                current_live_url, manual_live_status, manual_state_expires_at,\n                embed_capability, verification_state, enabled, created_at, updated_at\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "creator_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "creator_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "provider",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "provider"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "provider_channel_id",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "provider_channel_id"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "handle",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "handle"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "canonical_url",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "canonical_url"
+          }
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "current_live_url",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "current_live_url"
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "manual_live_status",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "manual_live_status"
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "manual_state_expires_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "manual_state_expires_at"
+          }
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "embed_capability",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "embed_capability"
+          }
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "verification_state",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "verification_state"
+          }
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "enabled",
+        "type_info": "Bool",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "enabled"
+          }
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "created_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "ordinal": 13,
+        "name": "updated_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "external_channels",
+            "name": "updated_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Timestamptz",
+        "Text",
+        "Timestamptz",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "d7191febdbfde829df92cc300e8bd2b6d0c7d86b07ed6e00654a8f79f8d65c96"
+}

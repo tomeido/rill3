@@ -1,0 +1,25 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO live_sessions (\n                id,\n                channel_id,\n                provider_session_id,\n                status,\n                title,\n                category,\n                thumbnail_url,\n                started_at,\n                ended_at,\n                observed_at,\n                last_success_at,\n                stale_since\n            )\n            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)\n            ON CONFLICT (channel_id) DO UPDATE SET\n                provider_session_id = EXCLUDED.provider_session_id,\n                status = EXCLUDED.status,\n                title = EXCLUDED.title,\n                category = EXCLUDED.category,\n                thumbnail_url = EXCLUDED.thumbnail_url,\n                started_at = EXCLUDED.started_at,\n                ended_at = EXCLUDED.ended_at,\n                observed_at = EXCLUDED.observed_at,\n                last_success_at = EXCLUDED.last_success_at,\n                stale_since = EXCLUDED.stale_since\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Timestamptz",
+        "Timestamptz",
+        "Timestamptz",
+        "Timestamptz",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "155d74e08fedd18fd1466e013966e99300e9026aae3885b572ba3d5e0b23cd9d"
+}

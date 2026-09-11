@@ -1,0 +1,11 @@
+<div class="channel-grid">
+  {% for channel in channels %}
+  <article class="channel-card">
+    <div class="channel-summary">
+      <div class="avatar" aria-hidden="true">{{ channel.initial }}</div>
+      <div><h3><a href="{{ paths.base }}/c/{{ channel.creator_slug }}?channel={{ channel.id }}">{{ channel.creator_name }}</a></h3><p class="meta">{{ channel.provider }} · {{ channel.status }}</p></div>
+    </div>
+    {% if channel.has_external_url %}<a class="channel-visit" href="{{ channel.external_url }}" rel="noopener noreferrer external" aria-label="{{ channel.creator_name }} {{ channel.provider }} 방문">{{ channel.provider }} 방문 <span aria-hidden="true">↗</span></a>{% endif %}
+  </article>
+  {% endfor %}
+</div>

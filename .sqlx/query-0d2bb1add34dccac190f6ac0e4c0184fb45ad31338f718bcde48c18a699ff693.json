@@ -1,0 +1,21 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT count(*) AS \"count!\"\n        FROM information_schema.columns\n        WHERE table_schema = current_schema()\n          AND table_name = 'provider_events'\n          AND column_name IN ('payload', 'raw_payload')\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count!",
+        "type_info": "Int8",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "0d2bb1add34dccac190f6ac0e4c0184fb45ad31338f718bcde48c18a699ff693"
+}

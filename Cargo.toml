@@ -1,0 +1,67 @@
+[workspace]
+members = [
+    "apps/rill3",
+    "crates/alerts",
+    "crates/auth",
+    "crates/db",
+    "crates/domain",
+    "crates/moderation",
+    "crates/payments",
+    "crates/providers",
+    "crates/telemetry",
+]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.96.1"
+repository = "https://github.com/tomeido/rill3"
+
+[workspace.dependencies]
+anyhow = "=1.0.104"
+askama = "=0.16.0"
+async-trait = "=0.1.92"
+axum = "=0.8.9"
+base64 = "=0.23.1"
+bytes = "=1.12.1"
+chrono = { version = "=0.4.45", default-features = false, features = ["clock", "serde"] }
+clap = { version = "=4.6.6", features = ["derive", "env"] }
+fastrand = "=2.5.0"
+hex = "=0.4.3"
+hmac = "=0.13.0"
+http = "=1.5.0"
+http-body-util = "=0.1.5"
+quick-xml = { version = "=0.42.0", features = ["serialize"] }
+reqwest = { version = "=0.13.4", default-features = false, features = ["json", "rustls", "query"] }
+secrecy = { version = "=0.10.3", features = ["serde"] }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = "=1.0.151"
+sha1 = "=0.11.0"
+sha2 = "=0.11.0"
+sqlx = { version = "=0.9.0", default-features = false, features = ["chrono", "derive", "macros", "migrate", "postgres", "runtime-tokio", "tls-rustls-ring-webpki", "uuid"] }
+subtle = "=2.6.1"
+thiserror = "=2.0.20"
+tokio = { version = "=1.53.1", features = ["macros", "net", "rt-multi-thread", "signal", "time"] }
+tokio-util = { version = "=0.7.19", features = ["rt"] }
+tower = { version = "=0.5.3", features = ["limit", "timeout", "util"] }
+tower-http = { version = "=0.7.1", features = ["catch-panic", "compression-br", "compression-gzip", "request-id", "set-header", "timeout", "trace"] }
+tracing = "=0.1.44"
+tracing-subscriber = { version = "=0.3.23", features = ["env-filter", "fmt", "json"] }
+url = { version = "=2.5.8", features = ["serde"] }
+utoipa = { version = "=5.5.0", features = ["axum_extras", "chrono", "uuid"] }
+uuid = { version = "=1.26.0", features = ["serde", "v4"] }
+wiremock = "=0.6.5"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+
+[profile.release]
+lto = "thin"
+strip = "symbols"

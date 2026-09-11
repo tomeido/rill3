@@ -1,0 +1,30 @@
+[package]
+name = "rill3-providers"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+publish = false
+
+[dependencies]
+async-trait.workspace = true
+chrono.workspace = true
+hex.workspace = true
+hmac.workspace = true
+reqwest.workspace = true
+rill3-domain = { path = "../domain" }
+secrecy.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha1.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+url.workspace = true
+
+[dev-dependencies]
+tokio.workspace = true
+uuid.workspace = true
+wiremock.workspace = true
+
+[lints]
+workspace = true

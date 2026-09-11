@@ -1,0 +1,14 @@
+# Insert inside the existing domeido.asuscomm.com site block.
+# Preserve /rill3: the application owns prefix routing and generated URLs.
+@rill3 path /rill3 /rill3/*
+handle @rill3 {
+	reverse_proxy rill3-server:3000 {
+		health_uri /health/live
+		health_interval 30s
+		health_timeout 3s
+		transport http {
+			dial_timeout 3s
+			response_header_timeout 30s
+		}
+	}
+}

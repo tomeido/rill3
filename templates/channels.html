@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}등록 채널 — RILL3{% endblock %}
+{% block content %}
+<nav class="breadcrumbs" aria-label="현재 위치"><a href="{{ paths.home }}">라이브</a><span aria-hidden="true">/</span><span>등록 채널</span></nav>
+<header class="directory-heading"><p class="eyebrow">CHANNELS</p><h1>등록 채널</h1><p>방송 중이 아니어도 채널을 찾고, 원래 플랫폼에서 영상을 둘러보세요.</p></header>
+{% if channels.is_empty() %}
+<div class="empty-state"><h2>{% if has_previous %}이 페이지에 표시할 채널이 없습니다.{% else %}아직 등록된 채널이 없습니다.{% endif %}</h2><a class="button button-secondary" href="{{ paths.home }}">라이브 홈으로</a></div>
+{% else %}
+<div class="section-heading"><h2>채널 목록</h2><span class="count">이 페이지 {{ channels.len() }}개</span></div>
+{% include "channel_cards.html" %}
+{% endif %}
+<nav class="pagination" aria-label="채널 목록 페이지">
+  {% if has_previous %}<a class="button button-secondary" href="{{ paths.channels }}">처음으로</a>{% endif %}
+  {% if !next_url.is_empty() %}<a class="button" href="{{ next_url }}">다음 채널 보기</a>{% endif %}
+</nav>
+{% endblock %}

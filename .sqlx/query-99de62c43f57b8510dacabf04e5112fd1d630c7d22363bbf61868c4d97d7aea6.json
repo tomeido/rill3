@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE external_channels\n            SET handle = $2\n            WHERE id = $1 AND handle IS DISTINCT FROM $2\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "99de62c43f57b8510dacabf04e5112fd1d630c7d22363bbf61868c4d97d7aea6"
+}

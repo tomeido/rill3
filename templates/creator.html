@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ creator_name }} — RILL3{% endblock %}
+{% block content %}
+<nav class="breadcrumbs" aria-label="현재 위치"><a href="{{ paths.home }}">라이브</a><span aria-hidden="true">/</span><span>{{ creator_name }}</span></nav>
+<header class="creator-header">
+  <div class="creator-avatar" aria-hidden="true">{{ initial }}</div>
+  <div><p class="eyebrow">{{ provider }}</p><h1>{{ creator_name }}</h1>{% if has_bio %}<p>{{ bio }}</p>{% endif %}</div>
+</header>
+
+{% if !channels.is_empty() %}
+<nav class="channel-switcher" aria-labelledby="connected-heading">
+  <h2 id="connected-heading">연결된 채널</h2>
+  <ul>{% for channel in channels %}<li><a href="{{ paths.base }}/c/{{ channel.creator_slug }}?channel={{ channel.id }}"{% if channel.id == channel_id %} aria-current="page"{% endif %}>{{ channel.provider }} <span>{{ channel.status }}</span></a></li>{% endfor %}</ul>
+  {% if !next_channels_url.is_empty() %}<a class="channel-more" href="{{ next_channels_url }}">다른 연결 채널 보기</a>{% endif %}
+</nav>
+{% endif %}
+
+<div class="watch-layout">
+  <section class="player-panel" aria-label="방송 플레이어">
+    {% if has_embed %}
+    <div class="player-frame player-frame--{{ embed_provider_class }}">
+      <iframe src="{{ embed_url }}" width="{{ embed_min_width }}" height="{{ embed_min_height }}" title="{{ creator_name }} 공식 방송 플레이어" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+    <div class="link-only player-fallback player-fallback--{{ embed_provider_class }}">
+      <p>현재 화면에서는 공식 플레이어의 최소 크기를 보장할 수 없습니다.</p>
+      {% if has_external_url %}<a class="button" href="{{ external_url }}" rel="noopener noreferrer external">{{ provider }}에서 보기 <span aria-hidden="true">↗</span></a>{% endif %}
+    </div>
+    {% else %}
+    <div class="link-only">
+      <p>{{ player_message }}</p>
+      {% if has_external_url %}<a class="button" href="{{ external_url }}" rel="noopener noreferrer external">{{ provider }}에서 보기 <span aria-hidden="true">↗</span></a>{% else %}<p>현재 이용할 수 있는 방송 링크가 없습니다.</p>{% endif %}
+    </div>
+    {% endif %}
+    {% if is_stale %}<p class="stale-message" role="status">플랫폼 응답이 지연되어 마지막으로 확인된 방송 정보를 표시합니다.</p>{% endif %}
+    <div class="stream-copy">
+      <h2>{{ title }}</h2>
+      {% if is_manual %}<p class="manual-label">등록된 방송 정보 기준입니다. 실제 방송 여부는 원래 플랫폼에서 확인해 주세요.</p>{% endif %}
+      {% if has_category %}<p>{{ category }}</p>{% endif %}
+      {% if has_embed && has_external_url %}
+      <div class="stream-actions"><a class="button" href="{{ external_url }}" rel="noopener noreferrer external">{{ provider }}에서 직접 보기 <span aria-hidden="true">↗</span></a></div>
+      {% endif %}
+    </div>
+  </section>
+
+  <aside class="tip-placeholder" aria-labelledby="tip-title">
+    <p class="eyebrow">준비 중</p>
+    <h2 id="tip-title">직접 후원</h2>
+    <p>방송인 지갑으로 바로 전달되는 온체인 후원은 준비 중입니다.</p>
+    <button type="button" disabled>후원 준비 중</button>
+  </aside>
+</div>
+{% endblock %}

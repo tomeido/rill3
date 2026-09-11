@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}찾을 수 없음 — RILL3{% endblock %}
+{% block content %}
+<section class="empty-state error-page">
+  <p class="eyebrow">404</p>
+  <h1>이 물길은 아직 열리지 않았습니다.</h1>
+  <p>요청한 방송인 페이지를 찾을 수 없습니다.</p>
+  <a class="button" href="{{ paths.home }}">라이브로 돌아가기</a>
+</section>
+{% endblock %}
