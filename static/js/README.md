@@ -1,4 +1,8 @@
-# JavaScript budget
+# Browser JavaScript
 
-M0/M1 ships no application JavaScript. Provider player code executes only inside an official iframe on a creator page. Future wallet and OBS islands must remain lazy-loaded and are measured against the 20 KB base-JavaScript budget.
+Discovery and creator pages remain server-rendered without wallet JavaScript.
+`wallet.js` loads only on registration and support pages, uses the injected
+EIP-1193 wallet, and has no CDN or third-party runtime dependency. Transactions
+are submitted by the user's wallet and receipts are checked before completion.
 
+Run browser logic tests with `node --test static/js/wallet.test.mjs`.

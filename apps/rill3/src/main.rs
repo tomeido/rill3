@@ -10,6 +10,7 @@ mod shutdown;
 mod store;
 mod views;
 mod watch_url;
+mod web3;
 mod webhooks;
 
 use anyhow::Result;
@@ -32,8 +33,8 @@ async fn main() -> Result<()> {
     }
 
     match cli.command {
-        Command::Server(arguments) => command_server::run(arguments).await,
-        Command::Worker(arguments) => command_worker::run(arguments).await,
+        Command::Server(arguments) => command_server::run(*arguments).await,
+        Command::Worker(arguments) => command_worker::run(*arguments).await,
         Command::Indexer(arguments) => command_indexer::run(&arguments),
         Command::SeedDemo(arguments) => command_server::seed_demo(arguments).await,
         Command::Channels(arguments) => command_channels::run(arguments).await,

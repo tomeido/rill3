@@ -22,9 +22,9 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Command {
     /// Serve public SSR pages, APIs, health checks, and provider webhooks.
-    Server(ServerArgs),
+    Server(Box<ServerArgs>),
     /// Reconcile registered external channels into `PostgreSQL`.
-    Worker(WorkerArgs),
+    Worker(Box<WorkerArgs>),
     /// Placeholder for the M3 chain indexer boundary.
     Indexer(IndexerArgs),
     /// Insert deterministic local-development fixtures.
@@ -53,6 +53,9 @@ pub struct CommonArgs {
 pub struct ServerArgs {
     #[command(flatten)]
     pub common: CommonArgs,
+
+    #[command(flatten)]
+    pub web3: crate::web3::Web3Args,
 
     #[arg(long, env = "RILL3_BIND_ADDR", default_value = "127.0.0.1:3000")]
     pub bind_addr: SocketAddr,
@@ -200,6 +203,7 @@ impl ServerArgs {
             255,
         )?;
         validate_youtube_websub_topic_prefix(&self.youtube_websub_topic_prefix)?;
+        self.web3.validate()?;
         Ok(())
     }
 
@@ -375,6 +379,7 @@ mod tests {
 
     fn valid_production_server_args() -> ServerArgs {
         ServerArgs {
+            web3: crate::web3::Web3Args::default(),
             common: CommonArgs {
                 database_url: "postgres://rill3:secret@postgres/rill3".to_owned(),
                 database_max_connections: DEFAULT_DATABASE_CONNECTIONS,

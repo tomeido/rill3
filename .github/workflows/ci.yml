@@ -56,7 +56,7 @@ jobs:
         run: cargo sqlx migrate run --source migrations
       - name: Run PostgreSQL integration tests
         # Provider-wide stale marking and directory assertions share this database.
-        run: cargo test -p rill3-db --test postgres --locked -- --test-threads=1
+        run: cargo test --workspace --all-targets --locked -- --test-threads=1
       - name: Check committed SQLx query metadata
         run: cargo sqlx prepare --workspace --check -- --all-targets
       - name: Compile without a live database
@@ -79,3 +79,19 @@ jobs:
         run: docker compose -f deploy/compose.selfhost.yml config --quiet
       - name: Check browser budgets
         run: bash tests/check-budgets.sh
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Check wallet behavior
+        run: node --test static/js/wallet.test.mjs
+
+  contracts:
+    name: Vault authorization and accounting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.3
+      - name: Check donation, ownership, withdrawal, and accounting invariants
+        run: forge test --root contracts

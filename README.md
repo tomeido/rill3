@@ -3,14 +3,18 @@
 > 방송은 어디서 하든, 후원은 직접·투명하게.  
 > Stream anywhere. Tip directly.
 
-RILL3 is a Rust-first discovery layer for live streams hosted by Twitch, YouTube, CHZZK, and link-only providers. M0/M1 discovers registered streams through documented provider interfaces, renders lightweight server-side pages, and never proxies video bytes. Wallets, tips, TTS, and OBS alerts deliberately remain out of scope until later milestones.
+RILL3 is a Rust-first discovery layer for live streams hosted by Twitch, YouTube, CHZZK, and link-only providers. M0/M1 discovers registered streams through documented provider interfaces, renders lightweight server-side pages, and never proxies video bytes. Public channel registration, official broadcaster verification, and native ETH donations through per-channel vaults are implemented as an opt-in Web3 extension. TTS and OBS alerts remain future work.
 
-## What works in M0/M1
+## Broadcaster registration and Web3 donations
+
+Register a channel at `/register`, then open its `/support/{channel UUID}` page. A configured EVM factory assigns a stable channel address; the broadcaster verifies their official platform account and signs with their wallet before claiming and withdrawing donations. Chain and OAuth configuration are required to enable payments. See [the Web3 setup guide](docs/WEB3.md) for deployment, trust boundaries, supported wallets, and tests.
+
+## Discovery features
 
 - One `rill3` binary with `server`, `worker`, operator `channels register` / `channels list`, `indexer` (stub), and development-only `seed-demo` commands
 - PostgreSQL-backed creators, external channels, normalized live sessions, and idempotent provider deliveries
 - Twitch Helix reconciliation and signed EventSub ingress
-- YouTube and link-only manual broadcasts with explicit status, bounded expiry, and a visible manual-source label; YouTube OAuth/liveBroadcasts remains an explicit TODO
+- YouTube and link-only manual broadcasts with explicit status, bounded expiry, and a visible manual-source label; YouTube liveBroadcasts discovery remains a TODO; ownership OAuth is available in the Web3 flow
 - Best-effort polling of the official CHZZK global live directory in link-only display mode
 - Strict HTTPS link-only channels that are stored but never fetched
 - Askama-rendered `/`, paginated `/channels`, and `/c/{slug}?channel=<uuid>`, plus `/live.json` with ETag support
@@ -127,8 +131,9 @@ For the shared server at <https://domeido.asuscomm.com/rill3>, see
 | `GET/POST /webhooks/youtube` | validated YouTube WebSub callback/challenge |
 | `GET /openapi.json` | machine-readable HTTP surface |
 
-There is no public channel-management write API. Registration is an operator
-CLI command; local fixture insertion remains a separate development command.
+Channel registration is available through `/register` and `POST /api/registrations`. Operator
+CLI registration remains available; local fixture insertion remains a separate development command.
+The new identity and payment routes are documented in [the Web3 guide](docs/WEB3.md).
 Omitting `channel` on a creator page selects its preferred channel. Supplying
 it selects only an enabled channel belonging to that creator; another creator's
 or a disabled channel returns 404, and a malformed UUID returns 400.

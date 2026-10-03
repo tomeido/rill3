@@ -116,10 +116,11 @@ pub(crate) trait PublicStore: Send + Sync {
 #[derive(Clone)]
 pub(crate) struct HttpState {
     pub(crate) store: Arc<dyn PublicStore>,
-    paths: PagePaths,
+    pub(crate) paths: PagePaths,
     embed: EmbedConfig,
     providers: Vec<ProviderStatusView>,
     pub(crate) webhooks: WebhookConfig,
+    pub(crate) web3: Option<Arc<crate::web3::Web3Service>>,
 }
 
 impl HttpState {
@@ -136,6 +137,7 @@ impl HttpState {
             embed,
             providers,
             webhooks,
+            web3: None,
         }
     }
 }
@@ -152,6 +154,7 @@ pub(crate) fn router(state: HttpState, timeout: Duration) -> Router {
         .route("/health/ready", get(readiness))
         .route("/openapi.json", get(openapi))
         .route("/static/app.css", get(stylesheet))
+        .merge(crate::web3::router())
         .merge(crate::webhooks::router(webhook_max_bytes));
     let app = if state.paths.base.is_empty() {
         public_routes
@@ -225,7 +228,7 @@ async fn security_headers(
     );
     headers.insert(
         header::REFERRER_POLICY,
-        HeaderValue::from_static("strict-origin-when-cross-origin"),
+        HeaderValue::from_static("no-referrer"),
     );
     headers.insert(
         HeaderName::from_static("permissions-policy"),
@@ -584,6 +587,7 @@ async fn stylesheet() -> Response {
 
 async fn openapi(State(state): State<HttpState>) -> impl IntoResponse {
     let mut document = ApiDoc::openapi();
+    document.merge(crate::web3::openapi());
     document.servers = Some(vec![utoipa::openapi::Server::new(state.paths.home)]);
     Json(document)
 }

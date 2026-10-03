@@ -1,6 +1,6 @@
 # Security model
 
-This document covers M0/M1. Wallet, payment, OAuth token storage, and OBS threat models will be expanded before those features are implemented.
+This document covers discovery and the opt-in broadcaster ownership/vault extension. See [Web3 setup and trust boundaries](WEB3.md) for the complete donation lifecycle. OBS alerts remain outside the current implementation.
 
 ## Trust boundaries
 
@@ -24,10 +24,17 @@ YouTube WebSub callbacks validate the configured callback token and accepted top
 
 Only normalized provider state and a SHA-256 payload hash are durable. Raw provider payloads are not stored. Event markers have a documented retention job target of 30 days; implementation of scheduled deletion is an operations task before public beta. Database enums are represented as checked text values so new provider/state values can be rolled out without PostgreSQL enum surgery.
 
-## Known M0/M1 limits
+## Broadcaster ownership and donations
 
-- No authentication-bearing browser route exists.
-- OAuth is an interface/TODO only; no OAuth tokens are stored.
-- Rate limiting/WAF policy is deployed at Caddy/CDN and receives production tuning in M6.
+Public registration never proves ownership or transfers an existing channel. Display names are untrusted; the support page exposes the actual provider channel ID. Official OAuth verifies an exact provider/channel identity using browser-bound, single-use state. Tokens are transient. Owner sessions live for 15 minutes and are scoped to one channel; legacy discovery verification flags never authorize payouts.
+
+Mutations require an exact trusted Origin and bounded JSON bodies. Auth/payment responses disable caching and use no-referrer. Opaque session/state tokens are stored only as SHA-256 hashes; cookies are HttpOnly, SameSite=Lax, path-scoped, and Secure on HTTPS. A wallet challenge is bound to the authenticated session, origin, channel, chain, factory, wallet and expiry, then consumed atomically. The first valid claim reserves its beneficiary permanently before the attestation can be returned.
+
+An immutable, code-hash-pinned EVM factory creates a dedicated native-ETH vault per provider/channel. The server attestor is trusted to assign the first owner; compromising it threatens unclaimed vaults. There is no operator withdrawal, upgrade or owner reset after a claim. A wallet signs and submits every deposit/claim/withdrawal itself. No donor or payout private key is held by the service. Unclaimed funds have no automatic refund, and lost owner keys cannot be recovered. See [contracts](../contracts/README.md).
+
+## Operational limits
+
+- Per-process request limits protect public registration, OAuth and RPC work. Caddy/CDN should also enforce IP-based and multi-instance limits.
+- Smart-account signatures, ERC-20 recovery, owner rotation and transaction indexing are not implemented.
 - External provider integration can be contract-tested locally, but production credentials and provider delivery must be verified in staging.
 

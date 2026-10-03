@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}방송 등록 — RILL3{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ paths.base }}/static/web3.css">
+<script src="{{ paths.base }}/static/wallet.js" defer></script>
+{% endblock %}
+{% block content %}
+<div class="web3-page registration-page" data-web3="register" data-base="{{ paths.base }}">
+  <nav class="breadcrumbs" aria-label="현재 위치"><a href="{{ paths.channels }}">등록 채널</a><span aria-hidden="true">/</span><span>방송 등록</span></nav>
+  <header class="web3-heading">
+    <p class="eyebrow">YOUR CHANNEL, YOUR SUPPORT</p>
+    <h1>내 방송에<br>후원 주소를 만드세요.</h1>
+    <p>채널을 등록하면 전용 Web3 주소가 부여됩니다. 방송 계정으로 본인 인증 후, 모인 후원금을 내 지갑으로 받을 수 있습니다.</p>
+  </header>
+  <div class="registration-layout">
+    <section class="web3-card" aria-labelledby="registration-title">
+      <h2 id="registration-title">방송 채널 등록</h2>
+      <form id="registration-form">
+        <label for="provider">방송 플랫폼</label>
+        <select id="provider" name="provider" required aria-describedby="channel-id-help">
+          <option value="twitch">Twitch</option>
+          <option value="youtube">YouTube</option>
+          <option value="chzzk">치지직</option>
+        </select>
+        <label for="provider-channel-id">플랫폼 채널 ID</label>
+        <input id="provider-channel-id" name="provider_channel_id" required maxlength="128" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="channel-id-help">
+        <p class="field-help" id="channel-id-help">Twitch의 숫자 사용자 ID를 입력하세요. 로그인 이름이나 방송 URL이 아닙니다.</p>
+        <label for="display-name">방송인 이름</label>
+        <input id="display-name" name="display_name" required maxlength="80" autocomplete="nickname" placeholder="채널에 표시할 이름">
+        <p class="field-help">등록만으로 채널 소유권이 인증되지는 않습니다.</p>
+        <button class="button wide-button" id="register-submit" type="submit">채널 등록하고 후원 주소 만들기</button>
+      </form>
+      <p class="web3-feedback" id="register-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      <noscript><p class="web3-warning">방송 등록에는 JavaScript가 필요합니다.</p></noscript>
+    </section>
+    <aside class="registration-guide" aria-labelledby="registration-guide-title">
+      <h2 id="registration-guide-title">후원을 받기까지</h2>
+      <ol class="web3-steps">
+        <li><strong>방송 등록</strong><p>플랫폼의 고유 채널 ID로 전용 후원 주소를 만듭니다.</p></li>
+        <li><strong>후원 페이지 공유</strong><p>인증 전에도 전용 주소에 후원금을 모을 수 있습니다.</p></li>
+        <li><strong>방송인 본인 인증</strong><p>해당 방송 계정으로 로그인하고, 본인 지갑에서 서명해 수령 지갑을 연결합니다.</p></li>
+        <li><strong>내 지갑으로 받기</strong><p>인증된 지갑으로 전용 주소의 후원금을 출금합니다. 지갑 연결과 출금에는 해당 네트워크의 수수료가 필요합니다.</p></li>
+      </ol>
+      <p class="field-help">같은 플랫폼의 같은 채널 ID는 같은 후원 페이지를 사용합니다. 개인키나 복구 문구는 요구하지 않습니다.</p>
+    </aside>
+  </div>
+</div>
+{% endblock %}

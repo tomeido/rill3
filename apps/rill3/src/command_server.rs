@@ -45,7 +45,8 @@ pub(crate) async fn run(arguments: ServerArgs) -> Result<()> {
     credentials.log_disabled();
     let twitch_enabled = credentials.twitch.is_ready();
     let chzzk_enabled = credentials.chzzk.is_ready();
-    let state = HttpState::new(
+    let web3 = crate::web3::Web3Service::new(database.clone(), &arguments).await?;
+    let mut state = HttpState::new(
         Arc::new(database),
         &arguments.base_path,
         EmbedConfig {
@@ -61,6 +62,7 @@ pub(crate) async fn run(arguments: ServerArgs) -> Result<()> {
             arguments.youtube_websub_topic_prefix,
         ),
     );
+    state.web3 = Some(Arc::new(web3));
     let app = crate::http::router(state, request_timeout);
     let listener = TcpListener::bind(arguments.bind_addr)
         .await

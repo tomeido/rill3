@@ -61,6 +61,16 @@ services:
 
   server:
     <<: *app
+    environment:
+      <<: *app-environment
+      YOUTUBE_CLIENT_ID: ${YOUTUBE_CLIENT_ID:-}
+      YOUTUBE_CLIENT_SECRET: ${YOUTUBE_CLIENT_SECRET:-}
+      RILL3_CHAIN_NAME: ${RILL3_CHAIN_NAME:-}
+      RILL3_RPC_URL: ${RILL3_RPC_URL:-}
+      RILL3_VAULT_FACTORY: ${RILL3_VAULT_FACTORY:-}
+      RILL3_FACTORY_CODE_HASH: ${RILL3_FACTORY_CODE_HASH:-}
+      RILL3_ATTESTOR_PRIVATE_KEY: ${RILL3_ATTESTOR_PRIVATE_KEY:-}
+      RILL3_CHAIN_ID: ${RILL3_CHAIN_ID:-0}
     command: ["server"]
     expose:
       - "3000"

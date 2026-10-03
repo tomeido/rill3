@@ -1,0 +1,62 @@
+.web3-page { max-width: 66rem; margin: auto; }
+.web3-page [hidden] { display: none !important; }
+.web3-heading { margin: 2.7rem 0 2rem; max-width: 47rem; }
+.web3-heading h1 { margin: .5rem 0 1rem; font-size: clamp(2rem, 5vw, 3.65rem); line-height: 1.14; letter-spacing: -.055em; overflow-wrap: anywhere; }
+.web3-heading > p:last-child, .web3-heading > div > p:last-child { color: var(--muted); max-width: 39rem; }
+.registration-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 3rem; align-items: start; }
+.web3-card { min-width: 0; padding: 1.5rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--panel); }
+.web3-card h2, .registration-guide h2 { margin: 0 0 1.1rem; font-size: 1.2rem; }
+.web3-card > .eyebrow + h2 { margin-top: .5rem; }
+.web3-page label { display: block; margin: 1.3rem 0 .5rem; font-weight: 700; font-size: .9rem; }
+.web3-page input, .web3-page select { display: block; width: 100%; min-height: 3rem; padding: .7rem .85rem; border: 1px solid #505765; border-radius: .55rem; background: var(--bg); color: var(--text); font: inherit; }
+.web3-page input:focus-visible, .web3-page select:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.web3-page input::placeholder { color: var(--muted); opacity: .85; }
+.web3-page button { border: 1px solid transparent; cursor: pointer; }
+.web3-page .button-secondary { border-color: var(--line); }
+.web3-page button:disabled { cursor: not-allowed; opacity: .5; }
+.web3-page .button:disabled:hover { background: var(--panel-2); color: var(--text); }
+.wide-button { width: 100%; }
+.web3-page form > .button { margin-top: 1.25rem; }
+.field-help, .web3-steps p { margin: .55rem 0; color: var(--muted); font-size: .85rem; overflow-wrap: anywhere; }
+.registration-guide { padding-top: 1.4rem; }
+.web3-steps { margin: 1.5rem 0; padding: 0; list-style: none; counter-reset: web3-step; }
+.web3-steps li { position: relative; counter-increment: web3-step; margin: 0 0 1.5rem; padding-left: 2.75rem; }
+.web3-steps li::before { content: counter(web3-step); display: grid; place-items: center; position: absolute; left: 0; top: -.1rem; width: 1.85rem; height: 1.85rem; border: 1px solid var(--line); border-radius: 50%; background: var(--panel-2); color: var(--accent); font-size: .8rem; font-weight: 800; }
+.web3-feedback { min-height: 1.4rem; margin: 1rem 0; color: var(--accent); font-size: .9rem; overflow-wrap: anywhere; }
+.web3-feedback:empty { min-height: 0; margin: 0; }
+.web3-feedback[data-error="true"], .web3-warning { color: #ffb7b7; }
+.web3-warning { padding: 1rem; border: 1px solid #743a3a; border-radius: .6rem; }
+.wallet-heading { max-width: none; display: flex; gap: 1rem; align-items: start; justify-content: space-between; }
+.wallet-heading h1 { font-size: clamp(1.9rem, 5vw, 3rem); }
+.network-badge, .ownership-badge { display: inline-flex; flex-shrink: 0; padding: .35rem .65rem; border: 1px solid var(--line); border-radius: 2rem; background: var(--panel-2); font-size: .75rem; color: var(--accent); }
+.network-badge { margin-top: .4rem; max-width: 100%; overflow-wrap: anywhere; }
+.wallet-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+.wallet-main, .wallet-side { display: grid; gap: 1.25rem; min-width: 0; }
+.web3-card-heading { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: space-between; align-items: baseline; margin-bottom: .5rem; }
+.web3-card-heading h2 { margin: 0; }
+.web3-address { display: block; margin: 1rem 0; padding: .9rem; border: 1px solid var(--line); border-radius: .55rem; color: var(--text); background: var(--bg); font-size: 1rem; line-height: 1.6; word-break: break-all; user-select: all; }
+.small-address { font-size: .8rem; }
+.address-card > .field-help { margin-top: 1rem; }
+.balance-panel { display: grid; gap: .3rem; margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+.balance-panel span { color: var(--muted); font-size: .85rem; }
+.balance-panel strong { font-size: clamp(1.4rem, 4vw, 2rem); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; letter-spacing: -.035em; }
+.claim-steps { margin-bottom: 0; }
+.claim-steps li { padding-left: 2.5rem; }
+.claim-steps .button { margin-top: .3rem; font-size: .83rem; text-align: center; }
+.text-button { padding: .6rem 0; background: transparent; color: var(--muted); text-decoration: underline; text-underline-offset: .25em; font: inherit; font-size: .8rem; }
+.transaction-card { margin-top: 1.25rem; }
+.canonical-channel { color: var(--text) !important; font-size: .85rem; overflow-wrap: anywhere; }
+.canonical-channel a { display: inline-block; padding: .5rem 0; color: var(--accent); }
+#wallet-lock-help { color: var(--warn); }
+#transaction-status { overflow-wrap: anywhere; }
+@media (max-width: 760px) {
+  .registration-layout, .wallet-layout { grid-template-columns: 1fr; gap: 1.25rem; }
+  .web3-heading { margin-top: 2rem; }
+  .wallet-heading { flex-direction: column; }
+  .wallet-heading h1 { margin-bottom: .65rem; }
+  .wallet-heading > div > p:last-child { margin-bottom: .2rem; }
+  .web3-card { padding: 1.15rem; }
+  .registration-guide { padding: 1rem .25rem; }
+  .web3-address { font-size: .88rem; }
+  .small-address { font-size: .78rem; }
+}

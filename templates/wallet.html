@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}채널 후원 — RILL3{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ paths.base }}/static/web3.css">
+<script src="{{ paths.base }}/static/wallet.js" defer></script>
+{% endblock %}
+{% block content %}
+<div class="web3-page" data-web3="wallet" data-base="{{ paths.base }}" data-channel-id="{{ channel_id }}">
+  <nav class="breadcrumbs" aria-label="현재 위치"><a href="{{ paths.channels }}">등록 채널</a><span aria-hidden="true">/</span><span>채널 후원</span></nav>
+  <header class="web3-heading wallet-heading">
+    <div><p class="eyebrow" id="channel-provider">CHANNEL SUPPORT</p><h1 id="channel-name">채널 후원</h1><p class="field-help">등록자가 입력한 이름입니다. 아래 플랫폼 채널 ID를 확인해 주세요.</p><p class="canonical-channel">플랫폼 채널 ID: <code id="canonical-channel-id">확인 중</code> <a id="canonical-channel-link" target="_blank" rel="noopener noreferrer external" hidden>공식 채널 확인 ↗</a></p></div>
+    <span class="network-badge" id="network-name">네트워크 확인 중</span>
+  </header>
+  <p class="web3-feedback" id="wallet-status" role="status" aria-live="polite" aria-atomic="true">후원 정보를 불러오고 있습니다.</p>
+  <noscript><p class="web3-warning">후원 및 지갑 연결에는 JavaScript와 이더리움 호환 지갑이 필요합니다.</p></noscript>
+  <div class="wallet-layout">
+    <div class="wallet-main">
+      <section class="web3-card address-card" aria-labelledby="receive-title">
+        <div class="web3-card-heading"><h2 id="receive-title">이 채널의 후원 주소</h2><span class="ownership-badge" id="ownership-label">확인 중</span></div>
+        <code class="web3-address" id="receive-address">—</code>
+        <button type="button" class="button button-secondary" id="copy-address" disabled>주소 복사</button>
+        <p class="field-help" id="network-help">설정된 네트워크의 기본 코인만 후원할 수 있습니다. 다른 네트워크나 토큰을 보내지 마세요.</p>
+        <div class="balance-panel"><span>채널 주소에 보관된 후원금</span><strong id="channel-balance">—</strong></div>
+        <p class="field-help" id="balance-help" data-claimed="연결된 방송인 지갑에서 보관된 후원금을 출금할 수 있습니다." data-pending="본인 인증 전 후원금은 채널 전용 계약 주소에 보관됩니다. 방송인이 인증하지 않으면 후원금이 보관된 채 남으며 자동 환불되지 않습니다.">방송인 인증과 수령 지갑 연결 후 출금할 수 있습니다.</p>
+      </section>
+      <section class="web3-card" aria-labelledby="tip-title">
+        <p class="eyebrow">SUPPORT THE STREAM</p><h2 id="tip-title">방송인 응원하기</h2>
+        <form id="tip-form">
+          <label for="tip-amount">후원 금액 <span id="tip-symbol"></span></label>
+          <input id="tip-amount" name="amount" type="text" inputmode="decimal" autocomplete="off" required maxlength="98" placeholder="0.01" aria-describedby="tip-help">
+          <p class="field-help" id="tip-help">소수점 아래 최대 18자리까지 입력할 수 있습니다. 네트워크 수수료는 별도입니다.</p>
+          <button type="submit" class="button wide-button" id="tip-submit" disabled>지갑으로 후원하기</button>
+        </form>
+        <p class="field-help">지갑에서 네트워크, 금액, 수신 계약을 확인한 뒤 전송해 주세요.</p>
+      </section>
+    </div>
+    <aside class="wallet-side">
+      <section class="web3-card" aria-labelledby="wallet-title">
+        <h2 id="wallet-title">내 지갑</h2>
+        <p class="field-help" id="connected-help" data-unavailable="지갑 확장 프로그램을 설치하거나 지갑 앱의 브라우저로 열어 주세요.">브라우저 확장 또는 지갑 앱의 브라우저로 연결할 수 있습니다.</p>
+        <code class="web3-address small-address" id="connected-wallet">연결된 지갑 없음</code>
+        <button type="button" class="button button-secondary wide-button" id="connect-wallet" disabled>지갑 연결</button>
+      </section>
+      <section class="web3-card" aria-labelledby="claim-title">
+        <p class="eyebrow">FOR CREATORS</p><h2 id="claim-title">이 방송의 방송인인가요?</h2>
+        <ol class="web3-steps claim-steps">
+          <li><strong>방송 계정 인증</strong><p id="verification-status" data-verified="방송 계정 본인 인증 완료" data-claimed="이미 수령 지갑이 연결되어 있습니다." data-available="방송 계정으로 로그인해 소유권을 확인합니다." data-unavailable="본인 인증이 설정되지 않았습니다. 운영자에게 문의해 주세요.">후원 정보를 확인한 뒤 본인 인증을 시작할 수 있습니다.</p><a class="button button-secondary" id="verify-channel" hidden>방송 계정으로 인증</a></li>
+          <li><strong>수령 지갑 연결</strong><p id="claim-help" data-unclaimed="본인 인증 후 연결한 지갑으로 서명하고 등록 거래를 승인해 주세요. 지갑 주소를 정확히 확인하세요.">인증한 방송 계정과 지갑 서명을 확인한 뒤, 블록체인에 수령 지갑을 등록합니다.</p><p id="wallet-lock-help">수령 지갑은 변경할 수 없습니다. 서명이 서버에 제출되면 해당 주소로 고정됩니다. 이후 등록 거래를 취소해도 같은 지갑으로 다시 진행해야 합니다.</p><button type="button" class="button button-secondary" id="claim-wallet" aria-describedby="wallet-lock-help claim-help" disabled>서명하고 수령 지갑 연결</button></li>
+          <li><strong>내 지갑으로 출금</strong><p id="withdraw-help">연결된 수령 지갑에서 보관된 후원금 전체를 출금할 수 있습니다.</p><button type="button" class="button" id="withdraw-funds" disabled>후원금 출금</button></li>
+        </ol>
+        <p class="field-help">수령 지갑 연결과 출금은 각각 블록체인 거래이며 수수료가 발생합니다.</p>
+        <button type="button" class="text-button" id="logout-channel" hidden>방송 계정 인증 로그아웃</button>
+      </section>
+    </aside>
+  </div>
+  <section class="web3-card transaction-card" id="transaction" aria-labelledby="transaction-title" hidden>
+    <h2 id="transaction-title">거래 상태</h2>
+    <p id="transaction-status" role="status" aria-live="polite" aria-atomic="true" data-submitted="거래가 제출되었습니다. 아직 완료되지 않았으며 블록 확인을 기다리고 있습니다." data-failed="블록체인에서 거래가 실패했습니다. 네트워크 수수료는 발생했을 수 있습니다." data-confirmed="거래가 블록에 포함되었고 2개 이상의 블록 확인을 받았습니다." data-mined="거래가 블록에 포함되었습니다. 두 번째 블록 확인을 기다리고 있습니다." data-pending="확인 대기 중입니다. 다시 보내지 말고 잠시 후 거래 확인을 눌러 주세요." data-unavailable="거래가 제출되었지만 확인을 마치지 못했습니다. 지갑의 거래 내역을 확인하거나 거래 확인을 다시 눌러 주세요."></p>
+    <span class="field-help">거래 해시</span><code class="web3-address small-address" id="transaction-hash"></code>
+    <button type="button" class="button button-secondary" id="check-transaction" disabled>거래 확인 다시 하기</button>
+  </section>
+</div>
+{% endblock %}

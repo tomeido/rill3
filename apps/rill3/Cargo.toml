@@ -19,6 +19,8 @@ http.workspace = true
 hex.workspace = true
 quick-xml.workspace = true
 rill3-db = { path = "../../crates/db" }
+rill3-auth = { path = "../../crates/auth" }
+rill3-payments = { path = "../../crates/payments" }
 rill3-domain = { path = "../../crates/domain" }
 rill3-providers = { path = "../../crates/providers" }
 rill3-telemetry = { path = "../../crates/telemetry" }
@@ -37,6 +39,7 @@ utoipa.workspace = true
 uuid.workspace = true
 
 [dev-dependencies]
+reqwest.workspace = true
 http-body-util.workspace = true
 
 [lints]

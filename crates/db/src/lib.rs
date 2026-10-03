@@ -6,6 +6,7 @@ mod lock;
 mod pool;
 mod records;
 mod repository;
+mod web3;
 
 use sqlx::PgPool;
 
@@ -14,10 +15,11 @@ pub use lock::AdvisoryLockGuard;
 pub use pool::{DatabaseOptions, MAX_POOL_CONNECTIONS};
 pub use records::{CreatorListing, LiveListing};
 pub use repository::MAX_QUERY_RESULTS;
+pub use web3::{PublicRegistration, WalletChallenge, Web3Binding};
 
 pub(crate) use records::{ChannelRow, CreatorRow, ListingRow};
 
-/// M0/M1 migrations embedded into the application binary.
+/// Versioned discovery and ownership migrations embedded into the application binary.
 pub static MIGRATOR: sqlx::migrate::Migrator = sqlx::migrate!("../../migrations");
 
 /// Cloneable `PostgreSQL` repository handle.
