@@ -20,13 +20,13 @@ repository = "https://github.com/tomeido/rill3"
 
 [workspace.dependencies]
 anyhow = "=1.0.104"
-askama = "=0.16.0"
+askama = "=0.16.1"
 async-trait = "=0.1.92"
 axum = "=0.8.9"
 base64 = "=0.23.1"
 bytes = "=1.12.1"
 chrono = { version = "=0.4.45", default-features = false, features = ["clock", "serde"] }
-clap = { version = "=4.6.6", features = ["derive", "env"] }
+clap = { version = "=4.6.7", features = ["derive", "env"] }
 fastrand = "=2.5.0"
 hex = "=0.4.3"
 k256 = { version = "=0.13.4", features = ["ecdsa"] }
@@ -34,7 +34,7 @@ hmac = "=0.13.0"
 http = "=1.5.0"
 http-body-util = "=0.1.5"
 quick-xml = { version = "=0.42.0", features = ["serialize"] }
-reqwest = { version = "=0.13.4", default-features = false, features = ["json", "rustls", "query"] }
+reqwest = { version = "=0.13.5", default-features = false, features = ["json", "rustls", "query"] }
 secrecy = { version = "=0.10.3", features = ["serde"] }
 serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = "=1.0.151"
@@ -43,7 +43,7 @@ sha2 = "=0.11.0"
 sha3 = "=0.10.8"
 sqlx = { version = "=0.9.0", default-features = false, features = ["chrono", "derive", "macros", "migrate", "postgres", "runtime-tokio", "tls-rustls-ring-webpki", "uuid"] }
 subtle = "=2.6.1"
-thiserror = "=2.0.20"
+thiserror = "=2.0.21"
 tokio = { version = "=1.53.1", features = ["macros", "net", "rt-multi-thread", "signal", "time"] }
 tokio-util = { version = "=0.7.19", features = ["rt"] }
 tower = { version = "=0.5.3", features = ["limit", "timeout", "util"] }
@@ -52,7 +52,7 @@ tracing = "=0.1.44"
 tracing-subscriber = { version = "=0.3.23", features = ["env-filter", "fmt", "json"] }
 url = { version = "=2.5.8", features = ["serde"] }
 utoipa = { version = "=5.5.0", features = ["axum_extras", "chrono", "uuid"] }
-uuid = { version = "=1.26.0", features = ["serde", "v4"] }
+uuid = { version = "=1.26.1", features = ["serde", "v4"] }
 wiremock = "=0.6.5"
 
 [workspace.lints.rust]
